@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block newserie %}
+<div class="col-5 text-light">
+    <h2>Crea nuova serie</h2>
+    <form action="{{url_for('new_serie')}}" method="POST" enctype="multipart/form-data">
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="TitleTextInput" class="form-label">Titolo</label>
+                <input type="text" id="TitleTextInput" name="title" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <select class="form-select" aria-label="Categoria" name="category" required>Categoria
+                    
+                        <option value="Politica">Politica</option>
+                        <option value="Musica">Musica</option>
+                        <option value="Scienze">Scienze</option>
+                        <option value="Varie">Varie</option>
+
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="DescTextarea" class="form-label">Descrizione</label>
+                <textarea class="form-control" id="DescTextarea" name="description" rows="3" placeholder="Descrizione della serie" required minlength="10" maxlength="250"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Immagine serie</label>
+                <input class="form-control" name="serie_img" type="file" id="imageFile" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="{{url_for('index')}}">
+                <button type="button" class="btn btn-secondary m-2" data-bs-dismiss="modal">Chiudi</button>
+            </a>
+            <button type="submit" class="btn btn-primary ">Conferma</button>
+        </div>
+      </form>
+    </div>
+{% endblock %}

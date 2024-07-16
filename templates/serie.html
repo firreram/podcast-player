@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block search_script %}<script defer src="{{url_for('static', filename='search_module.js') }}"></script>{% endblock %}
+{% block search %}
+<li class="nav-item resize">
+    <div class="container nav-link">
+      <div class="row">
+        <div class="col-8">
+          <input class="form-control mb-2" id="searchbar" type="text" placeholder="Search" aria-label="Search">
+        </div>
+        <div class="col-4">
+          <button type="button" class="btn btn-md btn-light fw-bold" id="textsearch">
+            search
+          </button>
+        </div>
+      </div>
+        
+        
+    </div>
+</li>
+{% endblock %}
+{% block serie %}
+<div class="col-12">
+    <div class="row mt-2 rounded-3 bg-gray">
+        <div class="col-5 m-1">
+            <img class="rounded-3 w-100 m-2" src="{{url_for('static', filename=serie.serie_img)}}" alt="...">
+    </div>
+        <div class="col-6 m-2 text-light rounded-3">
+            <h1 class="customfont">{{serie.title|e}}</h1>
+            <p>{{serie.description|e}}</p>
+            {% if current_user.is_authenticated %} <!--utente autenticato E creatore-->
+            {% if current_user.id == serie.creator_id %}
+          <a href="{{url_for('new_episode', id=serie.id)}}">
+            <button type="button" class="btn btn-success btn-md rounded-pill mt-4">
+                Aggiungi episodio  
+            </button>
+          </a>
+            <button type="button" class="btn btn-warning btn-md rounded-pill ms-2 mt-4" data-bs-toggle="modal" data-bs-target="#identifyModal0">
+                Modifica  
+            </button> <!--modale di modifica episodio con valori pre compilati-->
+            <div class="modal fade" id="identifyModal0" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <form action="{{url_for('editserie', id=serie.id)}}" method="POST">
+                      <div class="modal-body">
+                        <div class="mb-3">
+                          <input type="text" id="stitleTextInput" name="serie_title" class="form-control" value="{{serie.title|e}}" required> 
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" id="sdescTextInput" name="serie_description" class="form-control" value="{{serie.description|e}}" required>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                        <button type="submit" class="btn btn-warning">Modifica</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            <button type="button" class="btn btn-danger btn-md rounded-pill ms-2 mt-4" data-bs-toggle="modal" data-bs-target="#identifyModal1">
+                Elimina  
+            </button>
+            <div class="modal fade" id="identifyModal1" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title fs-5 text-dark">Eliminare serie?</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{url_for('deleteserie', id=serie.id)}}" method="POST">
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                        <button type="submit" class="btn btn-danger">SI</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            
+          {% endif %}
+          {% if followed %} <!--utente segue-->
+          <a href="{{url_for('unfollow', id=serie.id)}}">
+           <button type="button" class="btn btn-light btn-md rounded-pill ms-2 mt-4">
+            Non seguire  
+           </button>
+          </a>
+          {% else %}
+          <a href="{{url_for('follow', id=serie.id)}}">
+           <button type="button" class="btn btn-dark btn-md rounded-pill border ms-2 mt-4">
+            Segui  
+           </button>
+          </a>
+          {% endif %}
+          {% endif %} <!--se l'utente non è autenticato non mostrare il blocco-->
+        </div>
+    </div>
+    
+        <!--lista episodi scrollabile-->
+        <div class="row mt-4">
+            <div class="col-8 rounded-3 bg-dwhite">
+              <div class="row">
+                <div class="col-3">
+                 <div class="scrollablediv">
+                {% for episode in episodes %}
+              <span class="searchtarget"> 
+               <div class="d-inline">
+                <a  href="{{url_for('showserie', id=serie.id, episode_id=episode.id)}}"> <!--mostra episodio selezionato-->
+                    <p class="m-2 fw-bold">{{episode.title|e}}</p>
+                    <p class="hide">{{episode.description|e}}</p> <!--metadata per ricerca--> 
+                </a>
+                </div>
+                {% if current_user.id == serie.creator_id %} <!--solo il creatore puo editare gli episodi-->
+                <div class="d-inline">
+                    <button type="button" class="btn btn-warning btn-sm m-1" data-bs-toggle="modal" data-bs-target="#episodeModal{{episode.id}}"> <!--crea degli identificatori univoci per i modali per ricevere il testo dell ep. corrispondente-->
+                        edit  
+                    </button>
+                    <div class="modal fade" id="episodeModal{{episode.id}}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <form action="{{url_for('editepisode', id=serie.id, eid=episode.id)}}" method="POST">
+                              <div class="modal-body">
+                                <div class="mb-3">
+                                  <input type="text" id="episodeTitle" name="episode_title" class="form-control" value="{{episode.title|e}}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" id="episodeDesc" name="episode_description" class="form-control" value="{{episode.description|e}}" required>
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                <button type="submit" class="btn btn-warning">Modifica</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <div class="d-inline">
+                    <a href="{{url_for('deleteepisode', id=serie.id, eid=episode.id)}}">
+                        <button type="button" class="btn btn-danger btn-sm m-1 fw-bold">
+                            X  
+                        </button>
+                    </a>
+                    
+                </div>
+                {% endif %}
+              </span>
+                {% endfor %}
+                 </div>
+                </div>
+                <div class="col-9">
+                {% if current_episode %}
+                <h2 class="customfont mt-2">{{current_episode.title|e}}</h2>
+                <p class="mt-4">{{current_episode.description|e}}</p>
+                {% else %}
+                <h2 class="mt-2">Seleziona un episodio</h2>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-4">
+                {% if current_episode %}
+                <section>
+                    <div class="container align-bottom">
+                      <div class="row d-flex justify-content-left">
+                        <div class="col-12">
+                          <div class="card">
+
+                            <div class="scrollcomments">
+                            {% for comment in comments %} <!--mostra i commenti-->
+                            <div class="card-body">
+                              <div class="d-flex flex-start align-items-center">
+                                <div class="d-inline">
+                                  <h6 class="fw-bold text-primary mb-1">{{comment.username|e}}</h6>
+                                  <p class="text-muted small mb-0">
+                                    {{comment.date|e}}
+                                  </p>
+                                </div>
+                                
+                                  {% if comment.username == current_user.username %} <!--chi ha scritto il commento puo editare-->
+                                  <div class="d-inline">
+                                    <button type="button" class="btn btn-warning btn-sm m-1" data-bs-toggle="modal" data-bs-target="#commentModal{{comment.id}}">
+                                        edit  
+                                    </button>
+                                    <div class="modal fade" id="commentModal{{comment.id}}" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                          <div class="modal-content">
+                                            <form action="{{url_for('editcomment', id=serie.id, eid=current_episode.id, cid=comment.id)}}" method="POST">
+                                              <div class="modal-body">
+                                                <div class="mb-3">
+                                                  <input type="text" id="commentTextInput" name="commenttext" class="form-control" value="{{comment.content|e}}" required>
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                                <button type="submit" class="btn btn-warning">Modifica</button>
+                                              </div>
+                                            </form>
+                                          </div>
+                                        </div>
+                                      </div>
+                                </div>
+                                <div class="d-inline">
+                                    <a href="{{url_for('deletecomment', id=serie.id, eid=current_episode.id, cid=comment.id)}}">
+                                        <button type="button" class="btn btn-danger btn-sm m-1 fw-bold">
+                                            X  
+                                        </button>
+                                    </a>
+                                    
+                                </div>
+                                {% endif %}
+                              </div>
+                                
+                              
+                              <p class="mt-1 mb-1 text-dark">
+                                {{comment.content}}
+                              </p>
+                            </div>
+                            {% endfor %}
+                            </div>
+                            
+                            <form action="{{url_for('showserie', id=serie.id, episode_id=current_episode.id)}}" method="POST" enctype="multipart/form-data">
+                                <div class="card-footer py-3 border-0 bg-dwhite">
+                                  <div class="d-flex flex-start w-100">
+                                    <div class="form-outline w-100">
+                                      <label class="form-label" for="textArea">Commento</label>
+                                      {% if current_user.is_authenticated %} <!--disabilita spazio commenti se non autenticato-->
+                                      <textarea class="form-control bg-dwhite" id="textArea" name="text" rows="4" required></textarea>
+                                      {% else %}
+                                      <textarea class="form-control bg-dwhite" id="textArea" name="text" rows="4" disabled></textarea>
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                  <div class="float-end mt-2 pt-1">
+                                    {% if current_user.is_authenticated %}
+                                    <button type="submit" class="btn btn-primary btn-sm my-1">Commenta</button>
+                                    {% else %}
+                                    <button type="submit" class="btn btn-secondary btn-sm my-1" disabled>Commenta</button>
+                                    {% endif %}
+                                  </div>
+                                </div>
+                                </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  {% endif %}
+            </div>
+        </div>
+        <footer class="container-fluid rounded-3 bg-gray">
+            <div class="row mt-4 text-light align-bottom">
+                {% if current_episode %}
+            <span class="col-2">
+                <h5 class="mt-2">{{current_episode.title|e}}</h5>
+            </span>
+            <span class="col-10">
+                {% if current_user.is_authenticated %}
+                <audio controls>
+                <source src="{{url_for('static', filename = current_episode.audiofile)}}" type="audio/ogg">
+                <source src="{{url_for('static', filename = current_episode.audiofile)}}" type="audio/mpeg">
+                <source src="{{url_for('static', filename = current_episode.audiofile)}}" type="audio/m4a">
+                <source src="{{url_for('static', filename = current_episode.audiofile)}}" type="audio/waw">
+                Your browser does not support the audio tag.
+                </audio>
+                {% else %}
+                <p>Effettua il login per ascoltare questo episodio</p>
+                {% endif %}
+            </span>
+            {% endif %}
+            </div>
+             
+        </footer>
+</div>
+{% endblock %}

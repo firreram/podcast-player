@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+    <html lang="it">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="icon" href="{{url_for('static', filename='favicon0.png')}}">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+            <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+            <script>dayjs().format()</script>
+            <!--direttive per utilizzare gli script JS solamente quando necessario-->
+            {% block search_script %}{% endblock %}
+            {% block selector_script %}{% endblock %}
+            <link rel=stylesheet type="text/css" href="{{url_for('static', filename='style.css')}}">
+            <title>FREEPodcast</title>
+        </head>
+        <body>
+            <header>
+                <nav class="navbar navbar-dark navbar-expand-lg bg-body-tertiary bg-gray">
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="{{url_for('index')}}">
+                        <img src="{{url_for('static', filename='FREEPodcastCOMPLETE.png')}}" alt="FREEPodcast" width="256" height="144">
+                      </a>
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto">
+                            {% if current_user.is_authenticated %}
+                            {% if current_user.is_creator %} <!--bottone crea solo per creatore-->
+                            <li class="nav-item">
+                              <a href="{{url_for('new_serie')}}"> 
+                                <button type="button" class="btn btn-success btn-sm rounded-pill ms-2 mt-4">
+                                      Crea  
+                                </button>
+                              </a>
+                            </li>
+                            {% endif %}
+                            <li class="nav-item">
+                              <a href="{{url_for('logout')}}">
+                                <button type="button" class="btn btn-danger btn-sm rounded-pill ms-2 mt-4">
+                                    Logout
+                                </button>
+                              </a> 
+                            </li>
+                            <li class="nav-item m-2"> <!--icona utente linkata alla pagina profilo, ridondanza user friendly-->
+                                <span>
+                                <div>
+                                  <a href="{{url_for('showprofile')}}">
+                                    <img class="usrimg rounded-circle" src="{{url_for('static', filename=current_user.userimg)}}"
+                                alt="userimg" width="60" height="60">
+                                    </a>
+                                </div>
+                                </span>
+                            </li>
+                            {% else %} <!--se utente non autenticato-->
+                            <li class="nav-item">
+                              <a href="{{url_for('signup')}}">
+                                <button type="button" class="btn btn-dark rounded-pill border ms-2">
+                                  Iscriviti
+                                </button>
+                              </a>
+                            </li>
+                            <li class="nav-item"> <!--modale per login-->
+                                <button type="button" class="btn btn-light rounded-pill ms-3 me-3" data-bs-toggle="modal" data-bs-target="#identifyModal">
+                                  Accedi
+                                </button>
+                                    
+                            
+                                    <div class="modal fade" id="identifyModal" tabindex="-1">
+                                      <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                          <form action="/Home" method="POST">
+                                            <div class="modal-body">
+                                              <div class="mb-3">
+                                                <input type="text" id="usrnameTextInput" name="id" class="form-control" placeholder="Email" required>
+                                              </div>
+                                              <div class="mb-3">
+                                                <input type="password" id="pwdTextInput" name="password" class="form-control" placeholder="Password" required>
+                                              </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                                              <button type="submit" class="btn btn-primary">Login</button>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    </li>
+                            {% endif %}
+                        </ul>
+                      </div>
+                    </div>
+                  </nav>
+            </header>
+            <div class="container-fluid">
+                <div class="row">
+                    <aside class="col-lg-2">
+                        <ul class="navbar-dark ms-auto mt-2">
+                            {% block search %}{% endblock %}
+                            <li class="nav-item">
+                                <a class="nav-link {% block home_active %}{% endblock %}" href="{{url_for('index')}}">Home</a> <!--attiva il bottone se nella pagina corrispondente-->
+                            </li>
+                            {% if current_user.is_authenticated %} <!--utenti non loggati non possono avere pagina profilo-->
+                            <li class="nav-item ">
+                                <a class="nav-link {% block profile_active %}{% endblock %}" href="{{url_for('showprofile')}}">Libreria</a>
+                            </li>
+                            {% endif %}
+                            {% block categories %}{% endblock %}
+                        </ul>
+                    </aside>
+                    <main class="col-lg-10">
+                      
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{category}} alert-dismissible fade show mt-3" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    
+                    <div class="row p-2">
+    
+                        {% block series %}{% endblock %}
+                        {% block signup %}{% endblock %}
+                        {% block newserie %}{% endblock %}
+                        {% block serie %}{% endblock %}
+                        {% block newepisode %}{% endblock %}
+                        {% block profile %}{% endblock %}
+
+                    </div>
+                  </div>
+                </main>
+            </div>
+        </body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+            crossorigin="anonymous"></script>
+    </html>

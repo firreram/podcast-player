@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block signup %}
+<div class="col-5 text-light">
+<h2 class="">Registrazione nuovo utente</h2>
+<form action="{{url_for('signup')}}" method="POST" enctype="multipart/form-data">
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="idTextInput" class="form-label">E-mail</label>
+            <input type="text" id="idTextInput" name="id" class="form-control" required>
+          </div>
+        <div class="mb-3">
+          <label for="usrnameTextInput" class="form-label">Username</label>
+          <input type="text" id="usrnameTextInput" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="pwdTextInput" class="form-label">Password</label>
+            <input type="password" id="pwdTextInput" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="is_creator" value="1">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Sono un creator</label>
+              </div>
+        </div>
+        <div class="mb-3">
+            <label for="imageFile" class="form-label">Immagine profilo</label>
+            <input class="form-control" name="userimg" type="file" id="imageFile" accept=".jpeg, .jpg, .png, .raw" required>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="{{url_for('index')}}">
+            <button type="button" class="btn btn-secondary m-2">Chiudi</button>
+        </a>
+        <button type="submit" class="btn btn-primary ">Conferma</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

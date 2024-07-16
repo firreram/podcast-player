@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block selector_script %}<script defer src="{{url_for('static', filename='category_selector.js') }}"></script>{% endblock %}
+{% block home_active %}fw-bold{% endblock %}
+
+{% block categories %}
+<li class="nav-item mt-4">
+    <h5><strong>Categorie</strong></h5>
+</li>
+<li class="nav-item mt-1">
+  <a class="nav-link category-filter" href="#" data-option="Tutte">Tutte</a>
+</li>
+<li class="nav-item mt-1">
+    <a class="nav-link category-filter" href="#" data-option="Politica">Politica</a>
+</li>
+<li class="nav-item mt-1">
+  <a class="nav-link category-filter" href="#" data-option="Musica">Musica</a>
+</li> 
+<li class="nav-item mt-1">
+  <a class="nav-link category-filter" href="#" data-option="Scienze">Scienze</a>
+</li> 
+<li class="nav-item mt-1">
+  <a class="nav-link category-filter" href="#" data-option="Varie">Varie</a>
+</li>  
+{% endblock %}
+
+{% block series %}
+{% for serie in series %}
+<article class="col-6 my-2 serie" data-category="{{serie.category|e}}">
+  <a href="{{url_for('showserie', id=serie.id)}}">
+  
+    <div id="serie_container" class="container h-100 bg-dwhite rounded ">
+      <div class="row p-2 ">
+    <div class="col-12">
+      <img  class="rounded mt-2 w-100" src="{{url_for('static', filename = serie.serie_img)}}" alt="...">
+    <div class="py-2">
+      <div class="row">
+        <h3 class="col-9 customfont">{{serie.title|e}}</h3>
+        <h5 class="col-3 text-gray" id="serie_username">{{serie.username|e}}</h5>
+      </div>
+      <div class="row">
+        <p>{{serie.description|e}}</p>
+      </div>
+    </div>
+    </div>
+    </div>
+  </div>
+</a>    
+</article>
+{% endfor %}
+{% endblock %}

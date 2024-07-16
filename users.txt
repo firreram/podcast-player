@@ -1,0 +1,11 @@
+[USERMAIL][PASSWORD][IS_CREATOR]
+manuelfirr16@gmail.com admin yes
+franco@francopollo.it network1 no
+pincopallino@libero.it ciao yes
+utente1@gmail.com utente1 no
+utente2@gmail.com utente2 no
+utente3@gmail.com utente3 no
+utente4@gmail.com utente4 no
+utente5@gmail.com utente5 no
+bettosavalli@hotmail.com A_Gamer yes
+raggiodisole@libero.it RaggioDiSole yes 

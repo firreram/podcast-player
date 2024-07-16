@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block profile_active %}fw-bold{% endblock %} <!--attiva highlight in aside-->
+{% block profile %}
+    <div class="col-12">
+        <div class="row m-4 p-4 rounded bg-gray">
+            <div class="col-3">
+                <img class="usrimg rounded-3 w-100" src="{{url_for('static', filename=current_user.userimg)}}"
+    alt="userimg">
+            </div>
+            <div class="col-8 text-light">
+                <h3 class="fw-bold">{{current_user.username|e}}</h3>
+                <h5 class="text-gray">{{current_user.id|e}}</h5>
+                {% if current_user.is_creator %}
+                <h5 id="userstatus">Creator</h5>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row m-4 bg-gray rounded-3">
+            <h2 class="text-light fw-bold">Serie seguite:</h2>
+            {% for serie in series %}
+            
+            <div class="col-2">
+                <a href="{{url_for('showserie', id=serie.id)}}">
+                <img class="p-2 rounded-4 w-100" src="{{url_for('static', filename = serie.serie_img)}}" alt="..." width="224" height="108">
+                </a>
+            </div>
+            
+            <div class="col-9 my-auto">
+                <a href="{{url_for('showserie', id=serie.id)}}">
+                <h5 class="text-light customfont">{{serie.title}}</h5>
+                </a>
+            </div>
+            
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

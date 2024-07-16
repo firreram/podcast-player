@@ -1,0 +1,77 @@
+.bg-gray{
+    background-color: #191718;
+}
+
+.customfont{
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight:400;
+}
+
+.text-gray{
+    color:darkgray;
+}
+
+#serie_username{
+    text-align:end;
+}
+
+#serie_container{
+    height: 5rem;
+}
+
+#userstatus{
+    color:green;
+}
+
+body{
+    background-color: #292929;
+}
+
+aside {
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000000;
+    box-shadow: 0px 3px 10px 0px rgba(255, 255, 255, 0.2) inset; 
+  }
+
+aside li {
+    padding-bottom: 5px;
+    color: #ffffff;
+}
+
+aside>ul {
+    list-style-type: none;
+    padding: 1rem 1rem;
+}
+
+.hide {
+    display: none;
+}
+
+.scrollablediv {
+    overflow-y: scroll;
+    height: 31rem;
+    width: auto;
+    background-color: #f8f9fa;
+}
+
+.bg-dwhite {
+    background-color: #f8f9fa;
+}
+
+.scrollcomments{
+    overflow-y: scroll;
+    height:17rem;
+    width: auto;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+audio {
+    width: 100%;
+}
+
+
